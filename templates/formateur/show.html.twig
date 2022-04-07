@@ -1,0 +1,19 @@
+﻿{% extends 'base.html.twig' %}
+
+{% block title %}Formateur #{{ formateur.id }}{% endblock %}
+
+{% block body %}
+
+<h1>Sessions supervisées par {{ formateur }}</h1>
+
+{% if (formateur.session | length) != 0 %}
+<ul>
+    {% for session in formateur.session %}
+        <li>{{ session }} (du {{ session.dateDebut | date('d/m/Y') }} au {{ session.dateFin | date('d/m/Y') }})</li>
+    {% endfor %}
+</ul>
+{% else %}
+    <p>Acune session supervisée pour le moment</p>
+{% endif %}
+
+{% endblock %}

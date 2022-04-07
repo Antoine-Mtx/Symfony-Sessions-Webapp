@@ -1,0 +1,24 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des stagiaires{% endblock %}
+
+{% block body %}
+
+<h1>Liste des stagiaires ({{ stagiaires | length }} au total)</h1>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Stagiaire</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for stagiaire in stagiaires %}
+        <tr>
+            <td>{{ stagiaire }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}

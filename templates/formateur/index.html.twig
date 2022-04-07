@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Formateurs{% endblock %}
+
+{% block body %}
+
+<h1>Liste des formateurs ({{ formateurs | length }} au total)</h1>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Formateur</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for formateur in formateurs %}
+        <tr>
+            <td>
+                <a href="{{ path('show_formateur', {'id': formateur.id}) }}">{{ formateur }}</a>
+                </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}

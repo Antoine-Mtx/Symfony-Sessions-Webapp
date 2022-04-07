@@ -1,0 +1,49 @@
+﻿{% extends 'base.html.twig' %}
+
+{% block title %}Détail de la session #{{ session.id }}{% endblock %}
+
+{% block body %}
+
+<h1>Session {{ session }}</h1>
+
+<h2>Formateur référent</h2>
+
+<p> {{ session.formateurReferent }} </p>
+
+<h2>Nombre de places</h2>
+
+<p> {{ session.nbPlaces }} </p>
+
+<h2>Stagiaires inscrits ({{ (session.stagiaires | length) }})</h2>
+
+{% if (session.stagiaires | length) != 0 %}
+<ul>
+    {% for stagiaire in session.stagiaires %}
+        <li>{{ stagiaire }}</li>
+    {% endfor %}
+</ul>
+{% else %}
+    <p>Acune stagiaire inscrit pour le moment</p>
+{% endif %}
+
+<h2>Programme</h2>
+
+<table class="table table-striped">
+    <tr>
+        <th>Module</th>
+        <th>Nombre de jours</th>
+    </tr>
+    <tbody>
+        {% for programme in session.programmes %}
+        <tr>
+            <td colspan="2" class="text-center">{{ programme.moduleFormation.categorie }}</td>
+        </tr>
+        <tr>
+            <td>{{ programme.moduleFormation }}</td>
+            <td>{{ programme.nbJours }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}
