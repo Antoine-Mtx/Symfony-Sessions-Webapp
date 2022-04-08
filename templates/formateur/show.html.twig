@@ -9,7 +9,7 @@
 {% if (formateur.session | length) != 0 %}
 <ul>
     {% for session in formateur.session %}
-        <li>{{ session }} (du {{ session.dateDebut | date('d/m/Y') }} au {{ session.dateFin | date('d/m/Y') }})</li>
+        <li> <a href="{{ path('show_session', {'id': session.id}) }}">{{ session }}</a> (du {{ session.dateDebut | date('d/m/Y') }} au {{ session.dateFin | date('d/m/Y') }})</li>
     {% endfor %}
 </ul>
 {% else %}

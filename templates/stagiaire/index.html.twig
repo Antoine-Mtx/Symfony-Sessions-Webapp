@@ -15,7 +15,9 @@
     <tbody>
         {% for stagiaire in stagiaires %}
         <tr>
-            <td>{{ stagiaire }}</td>
+            <td>
+                <a href="{{ path('show_stagiaire', {'id':stagiaire.id}) }}">{{ stagiaire }}</a>
+            </td>
         </tr>
         {% endfor %}
     </tbody>

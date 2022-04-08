@@ -19,7 +19,7 @@
 
 <ul>
     {% for session in stagiaire.session %}
-        <li>{{ session }} (du {{ session.dateDebut | date('d/m/Y') }} au {{ session.dateFin | date('d/m/Y') }}</li>
+        <li>{{ session }} (du {{ session.dateDebut | date('d/m/Y') }} au {{ session.dateFin | date('d/m/Y') }})</li>
     {% endfor %}
 </ul>
 

@@ -2,10 +2,12 @@
 
 namespace App\Entity;
 
-use App\Repository\FormationRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
+use DateTime;
+use App\Entity\Session;
 use Doctrine\ORM\Mapping as ORM;
+use App\Repository\FormationRepository;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @ORM\Entity(repositoryClass=FormationRepository::class)
@@ -28,6 +30,11 @@ class Formation
      * @ORM\Column(type="string", length=50)
      */
     private $intitule;
+
+    /**
+     * @ORM\Column(type="text")
+     */
+    private $description;
 
     public function __construct()
     {
@@ -85,4 +92,38 @@ class Formation
     {
         return ucfirst($this->intitule);
     }
+
+    // retourne un tableau associatif des sessions en fonction de leur statut ("passé/en cours/à venir")
+
+    public function getSessionsStatut() {
+        $now = new DateTime();
+        $sessionsStatut = [
+            "passées" => [],
+            "en cours" => [],
+            "à venir" => [],
+        ];
+        foreach ($this->session as $session) {
+            if ($session->getDateDebut() > $now) {
+                $sessionsStatut["à venir"] []= $session;
+            } else if ($session->getDateFin() < $now) {
+                $sessionsStatut["passées"] []= $session;
+            } else {
+                $sessionsStatut["en cours"] []= $session;
+            }
+        }
+        return $sessionsStatut;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(string $description): self
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
 }

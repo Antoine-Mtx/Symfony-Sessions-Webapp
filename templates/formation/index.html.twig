@@ -15,7 +15,7 @@
     <tbody>
         {% for formation in formations %}
         <tr>
-            <td>{{ formation }}</td>
+            <td><a href="{{ path('show_formation', {'id': formation.id}) }}">{{ formation }}</a></td>
         </tr>
         {% endfor %}
     </tbody>

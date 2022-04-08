@@ -1,0 +1,24 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modules{% endblock %}
+
+{% block body %}
+
+<h1>Liste des modules de formation ({{ modules | length }} au total)</h1>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Module de formation</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for module in modules %}
+        <tr>
+            <td><a href="{{ path('show_module', {'id': module.id}) }}">{{ module }}</a></td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}

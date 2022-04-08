@@ -1,0 +1,39 @@
+﻿{% extends 'base.html.twig' %}
+
+{% block title %}Détail de la formation #{{ formation.id }}{% endblock %}
+
+{% block body %}
+
+<h1>formation {{ formation }}</h1>
+
+<h2>Description</h2>
+
+<p> {{ formation.description }} </p>
+
+<h2>Sessions</h2>
+
+<h3>Sessions en cours</h3>
+
+<ul>
+    {% for session in formation.sessionsStatut['en cours'] %}
+    <li><a href="{{ path('show_session', {'id': session.id}) }}">{{ session }}</a> (du {{ session.dateDebut | date('d/m/Y') }} au {{ session.dateFin | date('d/m/Y') }})</li>
+    {% endfor %}
+</ul>
+
+<h3>Sessions passées</h3>
+
+<ul>
+    {% for session in formation.sessionsStatut['passées'] %}
+    <li><a href="{{ path('show_session', {'id': session.id}) }}">{{ session }}</a> (du {{ session.dateDebut | date('d/m/Y') }} au {{ session.dateFin | date('d/m/Y') }})</li>
+    {% endfor %}
+</ul>
+
+<h3>Sessions à venir</h3>
+
+<ul>
+    {% for session in formation.sessionsStatut['à venir'] %}
+    <li><a href="{{ path('show_session', {'id': session.id}) }}">{{ session }}</a> (du {{ session.dateDebut | date('d/m/Y') }} au {{ session.dateFin | date('d/m/Y') }})</li>
+    {% endfor %}
+</ul>
+
+{% endblock %}
