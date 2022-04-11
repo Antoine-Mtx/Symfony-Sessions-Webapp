@@ -1,20 +1,16 @@
 
-INSERT INTO `categorie` (`id`, `intitule`) VALUES
-	(1, 'Développeur'),
-	(2, 'Bureautique'),
-	(3, 'Langues');
 
-INSERT INTO `formation` (`id`, `intitule`) VALUES
-	(1, 'Développeur web');
+INSERT INTO `formation` (`id`, `intitule`, description) VALUES
+	(1, 'Développeur web', '');
 /*!40000 ALTER TABLE `formation` ENABLE KEYS */;
 
 
-INSERT INTO `module_formation` (`id`, `categorie_id`, `intitule`) VALUES
-	(1, 2, 'Word'),
-	(2, 2, 'Powerpoint'),
-	(3, 1, 'Html/CSS'),
-	(4, 1, 'PhP'),
-	(5, 3, 'Anglais');
+INSERT INTO `module_formation` (`id`, `categorie_id`, `intitule`, description) VALUES
+	(1, 2, 'Word', ''),
+	(2, 2, 'Powerpoint',''),
+	(3, 1, 'Html/CSS',''),
+	(4, 1, 'PhP',''),
+	(5, 3, 'Anglais','');
 /*!40000 ALTER TABLE `module_formation` ENABLE KEYS */;
 
 INSERT INTO `programme` (`id`, `session_id`, `module_formation_id`, `nb_jours`) VALUES

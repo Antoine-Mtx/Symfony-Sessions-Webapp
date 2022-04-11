@@ -26,13 +26,25 @@
     <p>Acune stagiaire inscrit pour le moment</p>
 {% endif %}
 
+{# <h2>Stagiaires non inscrits ({{ (session.stagiaires | length) }})</h2>
+
+{% if (session.stagiaires | length) != 0 %}
+<ul>
+    {% for stagiaire in session.stagiaires %}
+        <li> <a href="{{ path('show_stagiaire', {'id':stagiaire.id}) }}">{{ stagiaire }}</a> </li>
+    {% endfor %}
+</ul>
+{% else %}
+    <p>Acune stagiaire inscrit pour le moment</p>
+{% endif %} #}
+
 <h2>Programme</h2>
 
 <table class="table table-striped">
     <thead>
         <tr>
-            <th>Module</th>
-            <th>Nombre de jours</th>
+            <th>Modules</th>
+            <th>Durée (jours)</th>
         </tr>
     </thead>
     <tbody>

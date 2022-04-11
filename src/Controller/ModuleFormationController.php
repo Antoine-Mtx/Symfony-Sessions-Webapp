@@ -3,7 +3,9 @@
 namespace App\Controller;
 
 use App\Entity\ModuleFormation;
+use App\Form\ModuleFormationType;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -21,6 +23,33 @@ class ModuleFormationController extends AbstractController
 
         return $this->render('module/index.html.twig', [
             'modules' => $modules,
+        ]);
+    }
+
+    /**
+     * @Route("/module/add", name="add_module")
+     * @Route("/module/update/{id}", name="update_module")
+     */
+    public function add(ManagerRegistry $doctrine, ModuleFormation $moduleFormation = NULL, Request $request) {
+
+        if (! $moduleFormation) {
+            $moduleFormation = new ModuleFormation();
+        }
+
+        $entityManager = $doctrine->getManager();
+        $form = $this->createForm(ModuleFormationType::class, $moduleFormation);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $moduleFormation = $form->getData();
+            $entityManager->persist($moduleFormation);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('index_module');
+        }
+
+        return $this->render('module/add.html.twig', [
+            'formModuleFormation' => $form->createView(),
         ]);
     }
 

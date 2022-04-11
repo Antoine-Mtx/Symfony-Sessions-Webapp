@@ -6,15 +6,16 @@
 
 <h1>Liste des sessions</h1>
 
+<p><a href="{{ path('add_session') }}"><button type="button" class="btn btn-success">Ajouter une session</button></a></p>
+
 <table class="table table-striped">
     <thead>
         <tr>
             <th>Intitulé Session</th>
+            <th>Formation attenante</th>
             <th>Date de début</th>
             <th>Date de fin</th>
-            <th>Nombre de places thérorique</th>
-            <th>Nombre de places réservées</th>
-            <th>Nombre de places restantes</th>
+            <th>Nombre d'inscrits</th>
             <th>Détail programme</th>
         </tr>
     </thead>
@@ -22,11 +23,10 @@
         {% for session in sessions %}
         <tr>
             <td><a href="{{ path('show_session', {'id': session.id}) }}">{{ session.intitule }}</a></td>
+            <td><a href="{{ path('show_formation', {'id': session.formation.id}) }}">{{ session.formation }}</a></td>
             <td>{{ session.dateDebut | date('d/m/Y') }}</td>
             <td>{{ session.dateFin | date('d/m/Y') }}</td>
-            <td>{{ session.nbPlaces }}</td>
-            <td>{{ session.stagiaires | length }}</td>
-            <td>{{ session.nbPlaces - (session.stagiaires | length) }}</td>
+            <td>{{ session.stagiaires | length }}/{{ session.nbPlaces }}</td>
             <td>{{ session.programmes | length }} modules</td>
         </tr>
         {% endfor %}        
