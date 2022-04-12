@@ -35,15 +35,15 @@ class SessionRepository extends ServiceEntityRepository
 
     // la fonction getNonInscrits renvoie un tableau contenant tous les stagiaire non inscrits à la session dont l'id est passée en paramètre
 
-    public function getNonInscrits($idSession) {
+    public function getNonInscrits($idSession)
+    {
         $em = $this->getEntityManager(); // on appelle notre gestionnaire de base de données
-        $sub = $em->createQueryBuilder(); //
+        $qb = $em->createQueryBuilder(); //
 
-        $qb = $sub;
         $qb->select('s')
             ->from('App\Entity\Stagiaire', 's')
-            ->leftJoin('s.sessions', 'se')
-            ->on('se.id = :id');
+            ->leftJoin('s.session', 'se')
+            ->where('se.id = :id');
 
         $sub = $em->createQueryBuilder();
         $sub->select('st')
@@ -55,6 +55,29 @@ class SessionRepository extends ServiceEntityRepository
         $query = $sub->getQuery();
         return $query->getResult();
     }
+
+    // // la fonction getNonAjoutes renvoie un tableau contenant tous les programmes non ajoutés à la session dont l'id est passée en paramètre
+
+    // public function getNonAjoutes($idSession)
+    // {
+    //     $em = $this->getEntityManager(); // on appelle notre gestionnaire de base de données
+    //     $qb = $em->createQueryBuilder();
+
+    //     $qb->select('s')
+    //         ->from('App\Entity\Stagiaire', 's')
+    //         ->leftJoin('s.session', 'se')
+    //         ->where('se.id = :id');
+
+    //     $sub = $em->createQueryBuilder();
+    //     $sub->select('p')
+    //         ->from('App\Entity\Programme', 'p')
+    //         ->where($sub->expr()->notIn('p.id', $qb->getDQL()))
+    //         ->setParameter('id', $idSession)
+    //         ->orderBy('st.nom');
+
+    //     $query = $sub->getQuery();
+    //     return $query->getResult();
+    // }
 
     /**
      * @throws ORMException
