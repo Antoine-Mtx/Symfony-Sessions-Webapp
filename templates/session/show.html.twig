@@ -1,99 +1,123 @@
 ﻿{% extends 'base.html.twig' %}
 
-{% block title %}Détail de la session #{{ session.id }}{% endblock %}
+{% block title %}Détail de la session #{{ session.id }}
+{% endblock %}
 
 {% block body %}
 
-<h1>Session {{ session }}</h1>
+	<h1>Session
+		{{ session }}</h1>
 
-<ul>
-    <li>Formation attenante : <a href="{{ path('show_formation', {'id':session.formation.id}) }}">{{ session.formation }}</a></li>
-    <li>Formateur référent : <a href="{{ path('show_formateur', {'id':session.formateurReferent.id}) }}">{{ session.formateurReferent }}</a></li>
-    <li>Nombre d'inscrits : {{ session.stagiaires | length }}/{{ session.nbPlaces }}</li>
-    <li>Date de début : {{ session.dateDebut | date('d/m/Y') }}</li>
-    <li>Date de fin : {{ session.dateFin | date('d/m/Y') }}</li>
-</ul>
+	<ul>
+		<li>Formation attenante :
+			<a href="{{ path('show_formation', {'id':session.formation.id}) }}">{{ session.formation }}</a>
+		</li>
+		<li>Formateur référent :
+			<a href="{{ path('show_formateur', {'id':session.formateurReferent.id}) }}">{{ session.formateurReferent }}</a>
+		</li>
+		<li>Nombre d'inscrits :
+			{{ session.stagiaires | length }}/{{ session.nbPlaces }}</li>
+		<li>Date de début :
+			{{ session.dateDebut | date('d/m/Y') }}</li>
+		<li>Date de fin :
+			{{ session.dateFin | date('d/m/Y') }}</li>
+	</ul>
 
-<h2>Stagiaires inscrits ({{ (session.stagiaires | length) }})</h2>
+	<h2>Stagiaires inscrits ({{ (session.stagiaires | length) }})</h2>
 
-{% if (session.stagiaires | length) != 0 %}
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th>Stagiaire</th>
-            <th>Désinscrire</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for stagiaire in session.stagiaires %}
-            <tr>
-                <td> <a href="{{ path('show_stagiaire', {'id':stagiaire.id}) }}">{{ stagiaire }}</a> </td>
-                <td> <a class="text-danger" href="{{ path('removeStagiaire_session', {'idStagiaire':stagiaire.id, 'idSession':session.id}) }}"><i class="fa-solid fa-user-minus"></i></a> </td>
-            </tr>
-        {% endfor %}
-    </tbody>
-</table>
-{% else %}
-<div class="alert alert-warning" role="alert">
-    Acune stagiaire inscrit pour le moment
-</div>
-{% endif %}
+	{% if (session.stagiaires | length) != 0 %}
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<th>Stagiaire</th>
+					<th>Désinscrire</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for stagiaire in session.stagiaires %}
+					<tr>
+						<td>
+							<a href="{{ path('show_stagiaire', {'id':stagiaire.id}) }}">{{ stagiaire }}</a>
+						</td>
+						<td>
+							<a class="text-danger" href="{{ path('removeStagiaire_session', {'idStagiaire':stagiaire.id, 'idSession':session.id}) }}">
+								<i class="fa-solid fa-user-minus"></i>
+							</a>
+						</td>
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	{% else %}
+		<div class="alert alert-warning" role="alert">
+			Acune stagiaire inscrit pour le moment
+		</div>
+	{% endif %}
 
-{% if (session.stagiaires | length) == session.nbPlaces %}
-<div class="alert alert-success" role="alert">
-    Session complète
-</div>
-{% endif %}
+	{% if (session.stagiaires | length) == session.nbPlaces %}
+		<div class="alert alert-success" role="alert">
+			Session complète
+		</div>
+	{% endif %}
 
-<h2>Stagiaires non inscrits ({{ stagiairesNonInscrits | length }})</h2>
+	<h2>Stagiaires non inscrits ({{ stagiairesNonInscrits | length }})</h2>
 
-{% if (stagiairesNonInscrits | length) != 0 %}
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th>Stagiaire</th>
-            <th>Inscrire</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for stagiaire in stagiairesNonInscrits %}
-            <tr>
-                <td> <a href="{{ path('show_stagiaire', {'id':stagiaire.id}) }}">{{ stagiaire }}</a> </td>
-                <td> <a class="text-success" href="{{ path('addStagiaire_session', {'idStagiaire':stagiaire.id, 'idSession':session.id}) }}"><i class="fa-solid fa-user-plus"></i></a> </td>
-            </tr>
-        {% endfor %}
-    </tbody>
-</table>
-{% else %}
-    <p>Acune stagiaire non inscrit</p>
-{% endif %}
+	{% if (stagiairesNonInscrits | length) != 0 %}
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<th>Stagiaire</th>
+					<th>Inscrire</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for stagiaire in stagiairesNonInscrits %}
+					<tr>
+						<td>
+							<a href="{{ path('show_stagiaire', {'id':stagiaire.id}) }}">{{ stagiaire }}</a>
+						</td>
+						<td>
+							<a class="text-success" href="{{ path('addStagiaire_session', {'idStagiaire':stagiaire.id, 'idSession':session.id}) }}">
+								<i class="fa-solid fa-user-plus"></i>
+							</a>
+						</td>
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+	{% else %}
+		<p>Acune stagiaire non inscrit</p>
+	{% endif %}
 
 
+	<h2>Programme</h2>
 
-<h2>Programme</h2>
-
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th>Modules</th>
-            <th>Catégorie</th>
-            <th>Durée (jours)</th>
-            <th>Supprimer</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for programme in session.programmes %}
-        <tr>
-            <td colspan="2" class="text-center">{{ programme.moduleFormation.categorie }}</td>
-        </tr>
-        <tr>
-            <td>{{ programme.moduleFormation }}</td>
-            <td>{{ programme.categorie }}</td>
-            <td>{{ programme.nbJours }}</td>
-            <td> <a class="text-danger" href="{{ path('removeProgramme_session', {'idProgramme':programme.id, 'idSession':session.id}) }}"><i class="fa-solid fa-file-xmark"></i></a> </td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+	<table class="table table-striped">
+		<thead>
+			<tr>
+				<th>Modules</th>
+				<th>Catégorie</th>
+				<th>Durée (jours)</th>
+				<th>Supprimer</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for programme in session.programmes %}
+				<tr>
+					<td colspan="2" class="text-center">{{ programme.moduleFormation.categorie }}</td>
+				</tr>
+				<tr>
+					<td>{{ programme.moduleFormation }}</td>
+					<td>{{ programme.moduleFormation.categorie }}</td>
+					<td>{{ programme.nbJours }}</td>
+					<td>
+						<a class="text-danger" href="{{ path('removeProgramme_session', {'idProgramme':programme.id, 'idSession':session.id}) }}">
+							<i class="fa-solid fa-file-xmark"></i>
+						</a>
+					</td>
+				</tr>
+			{% endfor %}
+		</tbody>
+	</table>
 
 {% endblock %}
