@@ -108,8 +108,33 @@
 					<td>{{ programme.moduleFormation.categorie }}</td>
 					<td>{{ programme.nbJours }}</td>
 					<td>
-						<a class="text-danger" href="{{ path('removeProgramme_session', {'idProgramme':programme.id, 'idSession':session.id}) }}">
-							<i class="fa-solid fa-file-xmark"></i>
+						<a class="text-danger" href="{{ path('remove_programme_session', {'idProgramme':programme.id, 'idSession':session.id}) }}">
+							<i class="fa-solid fa-rectangle-xmark"></i>
+						</a>
+					</td>
+				</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+
+	<table class="table table-striped">
+		<thead>
+			<tr>
+				<th>Modules</th>
+				<th>Catégorie</th>
+				<th>Durée (jours)</th>
+				<th>Programmer</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for moduleFormation in session.modulesNonProgrammes %}
+				<tr>
+					<td>{{ moduleFormation.intitule }}</td>
+					<td>{{ moduleFormation.categorie }}</td>
+					<td><input type="number" name="nbJours" min="1" value="1" id="nbJours" required>&nbsp;&nbsp;jours</td>
+					<td>
+						<a class="text-success" href="">
+							<i class="fa-solid fa-file-circle-plus"></i>
 						</a>
 					</td>
 				</tr>

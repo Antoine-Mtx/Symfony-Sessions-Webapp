@@ -89,7 +89,7 @@ class SessionController extends AbstractController
         $entityManager = $doctrine->getManager();
         $session->removeStagiaire($stagiaire);
         $entityManager->flush();
-        $stagiairesNonInscrits = $doctrine->getRepository(Session::class)->getNonInscrits($session->getId());
+        $stagiairesNonInscrits = $doctrine->getRepository(Session::class)->getStagiairesNonInscrits($session->getId());
 
         return $this->render('session/show.html.twig', [
             'session' => $session,
@@ -98,7 +98,7 @@ class SessionController extends AbstractController
     }
 
     /**
-     * @Route("/session/{idSession}/removeProgramme/{idProgramme}", name="removeProgramme_session")
+     * @Route("/session/{idSession}/removeProgramme/{idProgramme}", name="remove_programme_session")
      * @ParamConverter("session", options={"mapping": {"idSession": "id"}})
      * @ParamConverter("programme", options={"mapping": {"idProgramme": "id"}})
      */
@@ -108,11 +108,11 @@ class SessionController extends AbstractController
         $entityManager = $doctrine->getManager();
         $session->removeProgramme($programme);
         $entityManager->flush();
-        $programmesNonInscrits = $doctrine->getRepository(Session::class)->getNonInscrits($session->getId());
+        $modulesNonProgrammes = $doctrine->getRepository(Session::class)->getModulesNonProgrammes($session->getId());
 
         return $this->render('session/show.html.twig', [
             'session' => $session,
-            'programmesNonInscrits' => $programmesNonInscrits
+            'modulesNonProgrammes' => $modulesNonProgrammes
         ]);
     }
 

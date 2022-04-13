@@ -33,9 +33,9 @@ class SessionRepository extends ServiceEntityRepository
         }
     }
 
-    // la fonction getNonInscrits renvoie un tableau contenant tous les stagiaire non inscrits à la session dont l'id est passée en paramètre
+    // la fonction getStagiairesNonInscrits renvoie un tableau contenant tous les stagiaire non inscrits à la session dont l'id est passée en paramètre
 
-    public function getNonInscrits($idSession)
+    public function getStagiairesNonInscrits($idSession)
     {
         $em = $this->getEntityManager(); // on appelle notre gestionnaire de base de données
         $qb = $em->createQueryBuilder(); //
@@ -56,28 +56,28 @@ class SessionRepository extends ServiceEntityRepository
         return $query->getResult();
     }
 
-    // // la fonction getNonAjoutes renvoie un tableau contenant tous les programmes non ajoutés à la session dont l'id est passée en paramètre
+    // la fonction getModulesNonProgrammes renvoie un tableau contenant tous les modules de formation non ajoutés à la session dont l'id est passée en paramètre
 
-    // public function getNonAjoutes($idSession)
-    // {
-    //     $em = $this->getEntityManager(); // on appelle notre gestionnaire de base de données
-    //     $qb = $em->createQueryBuilder();
+    public function getModulesNonProgrammes($idSession)
+    {
+        $em = $this->getEntityManager(); // on appelle notre gestionnaire de base de données
+        $qb = $em->createQueryBuilder();
 
-    //     $qb->select('s')
-    //         ->from('App\Entity\Stagiaire', 's')
-    //         ->leftJoin('s.session', 'se')
-    //         ->where('se.id = :id');
+        $qb->select('m.moduleFormation')
+            ->from('App\Entity\ModuleFormation', 'm')
+            ->leftJoin('p.session', 'se')
+            ->where('se.id = :id');
 
-    //     $sub = $em->createQueryBuilder();
-    //     $sub->select('p')
-    //         ->from('App\Entity\Programme', 'p')
-    //         ->where($sub->expr()->notIn('p.id', $qb->getDQL()))
-    //         ->setParameter('id', $idSession)
-    //         ->orderBy('st.nom');
+        $sub = $em->createQueryBuilder();
+        $sub->select('mf')
+            ->from('App\Entity\ModuleFormation', 'mf')
+            ->where($sub->expr()->notIn('mf.id', $qb->getDQL()))
+            ->setParameter('id', $idSession)
+            ->orderBy('mf.intitule');
 
-    //     $query = $sub->getQuery();
-    //     return $query->getResult();
-    // }
+        $query = $sub->getQuery();
+        return $query->getResult();
+    }
 
     /**
      * @throws ORMException
