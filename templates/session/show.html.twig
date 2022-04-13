@@ -98,14 +98,11 @@
 				<th>Modules</th>
 				<th>Catégorie</th>
 				<th>Durée (jours)</th>
-				<th>Supprimer</th>
+				<th>Déprogrammer</th>
 			</tr>
 		</thead>
 		<tbody>
 			{% for programme in session.programmes %}
-				<tr>
-					<td colspan="2" class="text-center">{{ programme.moduleFormation.categorie }}</td>
-				</tr>
 				<tr>
 					<td>{{ programme.moduleFormation }}</td>
 					<td>{{ programme.moduleFormation.categorie }}</td>
