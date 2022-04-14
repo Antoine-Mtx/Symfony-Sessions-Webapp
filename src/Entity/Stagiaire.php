@@ -2,191 +2,95 @@
 
 namespace App\Entity;
 
-use DateTime;
 use Doctrine\ORM\Mapping as ORM;
-use App\Repository\StagiaireRepository;
-use Doctrine\Common\Collections\Collection;
-use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * @ORM\Entity(repositoryClass=StagiaireRepository::class)
+ * Stagiaire
+ *
+ * @ORM\Table(name="stagiaire")
+ * @ORM\Entity
  */
 class Stagiaire
 {
     /**
+     * @var int
+     *
+     * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=20)
+     * @var string
+     *
+     * @ORM\Column(name="nom", type="string", length=20, nullable=false)
      */
     private $nom;
 
     /**
-     * @ORM\Column(type="string", length=20)
+     * @var string
+     *
+     * @ORM\Column(name="prenom", type="string", length=20, nullable=false)
      */
     private $prenom;
 
     /**
-     * @ORM\Column(type="string", length=20)
+     * @var string
+     *
+     * @ORM\Column(name="sexe", type="string", length=20, nullable=false)
      */
     private $sexe;
 
     /**
-     * @ORM\Column(type="date")
+     * @var \DateTime
+     *
+     * @ORM\Column(name="date_naissance", type="date", nullable=false)
      */
     private $dateNaissance;
 
     /**
-     * @ORM\Column(type="string", length=20)
+     * @var string
+     *
+     * @ORM\Column(name="ville", type="string", length=20, nullable=false)
      */
     private $ville;
 
     /**
-     * @ORM\Column(type="string", length=50)
+     * @var string
+     *
+     * @ORM\Column(name="email", type="string", length=50, nullable=false)
      */
     private $email;
 
     /**
-     * @ORM\Column(type="string", length=15)
+     * @var string
+     *
+     * @ORM\Column(name="telephone", type="string", length=15, nullable=false)
      */
     private $telephone;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Session::class, inversedBy="stagiaires")
+     * @var \Doctrine\Common\Collections\Collection
+     *
+     * @ORM\ManyToMany(targetEntity="Session", inversedBy="stagiaire")
+     * @ORM\JoinTable(name="stagiaire_session",
+     *   joinColumns={
+     *     @ORM\JoinColumn(name="stagiaire_id", referencedColumnName="id")
+     *   },
+     *   inverseJoinColumns={
+     *     @ORM\JoinColumn(name="session_id", referencedColumnName="id")
+     *   }
+     * )
      */
     private $session;
 
+    /**
+     * Constructor
+     */
     public function __construct()
     {
-        $this->session = new ArrayCollection();
+        $this->session = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
-
-    public function getNom(): ?string
-    {
-        return $this->nom;
-    }
-
-    public function setNom(string $nom): self
-    {
-        $this->nom = $nom;
-
-        return $this;
-    }
-
-    public function getPrenom(): ?string
-    {
-        return $this->prenom;
-    }
-
-    public function setPrenom(string $prenom): self
-    {
-        $this->prenom = $prenom;
-
-        return $this;
-    }
-
-    public function getSexe(): ?string
-    {
-        return $this->sexe;
-    }
-
-    public function setSexe(string $sexe): self
-    {
-        $this->sexe = $sexe;
-
-        return $this;
-    }
-
-    public function getDateNaissance(): ?\DateTimeInterface
-    {
-        return $this->dateNaissance;
-    }
-
-    public function setDateNaissance(\DateTimeInterface $dateNaissance): self
-    {
-        $this->dateNaissance = $dateNaissance;
-
-        return $this;
-    }
-
-    public function getVille(): ?string
-    {
-        return $this->ville;
-    }
-
-    public function setVille(string $ville): self
-    {
-        $this->ville = $ville;
-
-        return $this;
-    }
-
-    public function getEmail(): ?string
-    {
-        return $this->email;
-    }
-
-    public function setEmail(string $email): self
-    {
-        $this->email = $email;
-
-        return $this;
-    }
-
-    public function getTelephone(): ?string
-    {
-        return $this->telephone;
-    }
-
-    public function setTelephone(string $telephone): self
-    {
-        $this->telephone = $telephone;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Session>
-     */
-    public function getSession(): Collection
-    {
-        return $this->session;
-    }
-
-    public function addSession(Session $session): self
-    {
-        if (!$this->session->contains($session)) {
-            $this->session[] = $session;
-        }
-
-        return $this;
-    }
-
-    public function removeSession(Session $session): self
-    {
-        $this->session->removeElement($session);
-
-        return $this;
-    }
-
-    public function __toString()
-    {
-        return ucfirst($this->prenom)." ".strtoupper($this->nom);
-    }
-
-    public function getAge()
-    {
-        return date_diff(new DateTime(), $this->dateNaissance)->y;
-    }
 }
-
-

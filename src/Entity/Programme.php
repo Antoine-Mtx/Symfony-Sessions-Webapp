@@ -2,76 +2,51 @@
 
 namespace App\Entity;
 
-use App\Repository\ProgrammeRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass=ProgrammeRepository::class)
+ * Programme
+ *
+ * @ORM\Table(name="programme", indexes={@ORM\Index(name="IDX_3DDCB9FF3A53B0DC", columns={"module_formation_id"}), @ORM\Index(name="IDX_3DDCB9FF613FECDF", columns={"session_id"})})
+ * @ORM\Entity
  */
 class Programme
 {
     /**
+     * @var int
+     *
+     * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $id;
 
     /**
-     * @ORM\Column(type="integer")
+     * @var int
+     *
+     * @ORM\Column(name="nb_jours", type="integer", nullable=false)
      */
     private $nbJours;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Session::class, inversedBy="programmes")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $session;
-
-    /**
-     * @ORM\ManyToOne(targetEntity=ModuleFormation::class, inversedBy="programmes")
-     * @ORM\JoinColumn(nullable=false)
+     * @var \ModuleFormation
+     *
+     * @ORM\ManyToOne(targetEntity="ModuleFormation")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="module_formation_id", referencedColumnName="id")
+     * })
      */
     private $moduleFormation;
 
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
+    /**
+     * @var \Session
+     *
+     * @ORM\ManyToOne(targetEntity="Session")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="session_id", referencedColumnName="id")
+     * })
+     */
+    private $session;
 
-    public function getNbJours(): ?int
-    {
-        return $this->nbJours;
-    }
 
-    public function setNbJours(int $nbJours): self
-    {
-        $this->nbJours = $nbJours;
-
-        return $this;
-    }
-
-    public function getSession(): ?Session
-    {
-        return $this->session;
-    }
-
-    public function setSession(?Session $session): self
-    {
-        $this->session = $session;
-
-        return $this;
-    }
-
-    public function getModuleFormation(): ?ModuleFormation
-    {
-        return $this->moduleFormation;
-    }
-
-    public function setModuleFormation(?ModuleFormation $moduleFormation): self
-    {
-        $this->moduleFormation = $moduleFormation;
-
-        return $this;
-    }
 }

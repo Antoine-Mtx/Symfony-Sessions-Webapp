@@ -122,7 +122,7 @@ class SessionController extends AbstractController
     public function show(ManagerRegistry $doctrine, int $id): Response
     {
         $session = $doctrine->getRepository(Session::class)->find($id); // on récupère l'objet de la classe "Session" ayant pour id "$id"
-        $stagiairesNonInscrits = $doctrine->getRepository(Session::class)->getNonInscrits($id);
+        $stagiairesNonInscrits = $doctrine->getRepository(Session::class)->getStagiairesNonInscrits($id);
 
         if (!$session) {
             throw $this->createNotFoundException(

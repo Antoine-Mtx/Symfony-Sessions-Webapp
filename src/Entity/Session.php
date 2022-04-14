@@ -2,221 +2,86 @@
 
 namespace App\Entity;
 
-use App\Repository\SessionRepository;
-use DateTime;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass=SessionRepository::class)
+ * Session
+ *
+ * @ORM\Table(name="session", indexes={@ORM\Index(name="IDX_D044D5D45200282E", columns={"formation_id"}), @ORM\Index(name="IDX_D044D5D4B5D40EDC", columns={"formateur_referent_id"})})
+ * @ORM\Entity
  */
 class Session
 {
     /**
+     * @var int
+     *
+     * @ORM\Column(name="id", type="integer", nullable=false)
      * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
+     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=75)
+     * @var string
+     *
+     * @ORM\Column(name="intitule", type="string", length=75, nullable=false)
      */
     private $intitule;
 
     /**
-     * @ORM\Column(type="integer")
+     * @var int
+     *
+     * @ORM\Column(name="nb_places", type="integer", nullable=false)
      */
     private $nbPlaces;
 
     /**
-     * @ORM\Column(type="date")
+     * @var \DateTime
+     *
+     * @ORM\Column(name="date_debut", type="date", nullable=false)
      */
     private $dateDebut;
 
     /**
-     * @ORM\Column(type="date")
+     * @var \DateTime
+     *
+     * @ORM\Column(name="date_fin", type="date", nullable=false)
      */
     private $dateFin;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Formateur::class, inversedBy="session")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $formateurReferent;
-
-    /**
-     * @ORM\ManyToOne(targetEntity=Formation::class, inversedBy="session")
-     * @ORM\JoinColumn(nullable=false)
+     * @var \Formation
+     *
+     * @ORM\ManyToOne(targetEntity="Formation")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="formation_id", referencedColumnName="id")
+     * })
      */
     private $formation;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Stagiaire::class, mappedBy="session")
+     * @var \Formateur
+     *
+     * @ORM\ManyToOne(targetEntity="Formateur")
+     * @ORM\JoinColumns({
+     *   @ORM\JoinColumn(name="formateur_referent_id", referencedColumnName="id")
+     * })
      */
-    private $stagiaires;
+    private $formateurReferent;
 
     /**
-     * @ORM\OneToMany(targetEntity=Programme::class, mappedBy="session", cascade={"persist"})
+     * @var \Doctrine\Common\Collections\Collection
+     *
+     * @ORM\ManyToMany(targetEntity="Stagiaire", mappedBy="session")
      */
-    private $programmes;
+    private $stagiaire;
 
+    /**
+     * Constructor
+     */
     public function __construct()
     {
-        $this->stagiaires = new ArrayCollection();
-        $this->programmes = new ArrayCollection();
+        $this->stagiaire = new \Doctrine\Common\Collections\ArrayCollection();
     }
-
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
-
-    public function getIntitule(): ?string
-    {
-        return $this->intitule;
-    }
-
-    public function setIntitule(string $intitule): self
-    {
-        $this->intitule = $intitule;
-
-        return $this;
-    }
-
-    public function getNbPlaces(): ?int
-    {
-        return $this->nbPlaces;
-    }
-
-    public function setNbPlaces(int $nbPlaces): self
-    {
-        $this->nbPlaces = $nbPlaces;
-
-        return $this;
-    }
-
-    public function getDateDebut(): ?\DateTimeInterface
-    {
-        return $this->dateDebut;
-    }
-
-    public function setDateDebut(\DateTimeInterface $dateDebut): self
-    {
-        $this->dateDebut = $dateDebut;
-
-        return $this;
-    }
-
-    public function getDateFin(): ?\DateTimeInterface
-    {
-        return $this->dateFin;
-    }
-
-    public function setDateFin(\DateTimeInterface $dateFin): self
-    {
-        $this->dateFin = $dateFin;
-
-        return $this;
-    }
-
-    public function getFormateurReferent(): ?Formateur
-    {
-        return $this->formateurReferent;
-    }
-
-    public function setFormateurReferent(?Formateur $formateurReferent): self
-    {
-        $this->formateurReferent = $formateurReferent;
-
-        return $this;
-    }
-
-    public function getFormation(): ?Formation
-    {
-        return $this->formation;
-    }
-
-    public function setFormation(?Formation $formation): self
-    {
-        $this->formation = $formation;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Stagiaire>
-     */
-    public function getStagiaires(): Collection
-    {
-        return $this->stagiaires;
-    }
-
-    public function addStagiaire(Stagiaire $stagiaire): self
-    {
-        if (!$this->stagiaires->contains($stagiaire)) {
-            $this->stagiaires[] = $stagiaire;
-            $stagiaire->addSession($this);
-        }
-
-        return $this;
-    }
-
-    public function removeStagiaire(Stagiaire $stagiaire): self
-    {
-        if ($this->stagiaires->removeElement($stagiaire)) {
-            $stagiaire->removeSession($this);
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Programme>
-     */
-    public function getProgrammes(): Collection
-    {
-        return $this->programmes;
-    }
-
-    public function addProgramme(Programme $programme): self
-    {
-        if (!$this->programmes->contains($programme)) {
-            $this->programmes[] = $programme;
-            $programme->setSession($this);
-        }
-
-        return $this;
-    }
-
-    public function removeProgramme(Programme $programme): self
-    {
-        if ($this->programmes->removeElement($programme)) {
-            // set the owning side to null (unless already changed)
-            if ($programme->getSession() === $this) {
-                $programme->setSession(null);
-            }
-        }
-
-        return $this;
-    }
-
-    public function __toString()
-    {
-        return ucfirst($this->intitule);
-    }
-
-    // public function trieParCategorieProgramme()
-    // {
-    //     $programmesTries = $this->programmes;
-    //     $programmesTries->uasort(function ($a, $b) {
-    //         if ($a->categorie == $b->categorie) {
-    //             return 0;
-    //         }
-    //         return ($a->categorie < $b->categorie) ? -1 : 1;
-    //     });
-    //     return $programmesTries;
-    // }
 
 }
