@@ -117,6 +117,8 @@
 		</tbody>
 	</table>
 
+	{{ dump(modulesNonProgrammes) }}
+
 	<table class="table table-striped">
 		<thead>
 			<tr>
@@ -127,7 +129,7 @@
 			</tr>
 		</thead>
 		<tbody>
-			{% for moduleFormation in session.modulesNonProgrammes %}
+			{% for moduleFormation in modulesNonProgrammes %}
 				<tr>
 					<td>{{ moduleFormation.intitule }}</td>
 					<td>{{ moduleFormation.categorie }}</td>

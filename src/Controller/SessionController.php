@@ -72,9 +72,8 @@ class SessionController extends AbstractController
         $entityManager->flush();
         $stagiairesNonInscrits = $doctrine->getRepository(Session::class)->getNonInscrits($session->getId());
 
-        return $this->render('session/show.html.twig', [
-            'session' => $session,
-            'stagiairesNonInscrits' => $stagiairesNonInscrits
+        return $this->redirectToRoute('show_session', [
+            'id' => $session->getId(),
         ]);
     }
 
@@ -89,11 +88,11 @@ class SessionController extends AbstractController
         $entityManager = $doctrine->getManager();
         $session->removeStagiaire($stagiaire);
         $entityManager->flush();
+        $modulesNonProgrammes = $doctrine->getRepository(Session::class)->getModulesNonProgrammes($session->getId());
         $stagiairesNonInscrits = $doctrine->getRepository(Session::class)->getStagiairesNonInscrits($session->getId());
 
-        return $this->render('session/show.html.twig', [
-            'session' => $session,
-            'stagiairesNonInscrits' => $stagiairesNonInscrits
+        return $this->redirectToRoute('show_session', [
+            'id' => $session->getId(),
         ]);
     }
 
@@ -107,12 +106,14 @@ class SessionController extends AbstractController
 
         $entityManager = $doctrine->getManager();
         $session->removeProgramme($programme);
+        $entityManager->remove($programme);
+        $entityManager->persist($session);
         $entityManager->flush();
         $modulesNonProgrammes = $doctrine->getRepository(Session::class)->getModulesNonProgrammes($session->getId());
-
-        return $this->render('session/show.html.twig', [
-            'session' => $session,
-            'modulesNonProgrammes' => $modulesNonProgrammes
+        $stagiairesNonInscrits = $doctrine->getRepository(Session::class)->getStagiairesNonInscrits($session->getId());
+        
+        return $this->redirectToRoute('show_session', [
+            'id' => $session->getId(),
         ]);
     }
 
@@ -122,7 +123,8 @@ class SessionController extends AbstractController
     public function show(ManagerRegistry $doctrine, int $id): Response
     {
         $session = $doctrine->getRepository(Session::class)->find($id); // on récupère l'objet de la classe "Session" ayant pour id "$id"
-        $stagiairesNonInscrits = $doctrine->getRepository(Session::class)->getNonInscrits($id);
+        $stagiairesNonInscrits = $doctrine->getRepository(Session::class)->getStagiairesNonInscrits($id);
+        $modulesNonProgrammes = $doctrine->getRepository(Session::class)->getModulesNonProgrammes($id);
 
         if (!$session) {
             throw $this->createNotFoundException(
@@ -132,7 +134,8 @@ class SessionController extends AbstractController
 
         return $this->render('session/show.html.twig', [ // notre méthode rend le template "session/show.html.twig" où on pourra afficher les informations accessibles de notre objet session avec "{{ session }}"
             'session' => $session,
-            'stagiairesNonInscrits' => $stagiairesNonInscrits
+            'stagiairesNonInscrits' => $stagiairesNonInscrits,
+            'modulesNonProgrammes' => $modulesNonProgrammes,
         ]);
     }
 }

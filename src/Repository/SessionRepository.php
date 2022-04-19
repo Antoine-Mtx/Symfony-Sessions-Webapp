@@ -60,22 +60,33 @@ class SessionRepository extends ServiceEntityRepository
 
     public function getModulesNonProgrammes($idSession)
     {
-        $em = $this->getEntityManager(); // on appelle notre gestionnaire de base de données
-        $qb = $em->createQueryBuilder();
+        // on récupère la liste des modules de formation inclus dans la session dont l'id est $idSession
+        $em = $this->getEntityManager();
 
-        $qb->select('m.moduleFormation')
-            ->from('App\Entity\ModuleFormation', 'm')
-            ->leftJoin('p.session', 'se')
+        $sql1 = $em->createQueryBuilder();
+
+        $sql1->select('IDENTITY(p.moduleFormation)')
+            // ->from('App\Entity\ModuleFormation','mf')
+            ->from('App\Entity\Programme','p')
+            // ->where('p.moduleFormation = mf')
+            ->leftJoin('p.session','se')
             ->where('se.id = :id');
 
-        $sub = $em->createQueryBuilder();
-        $sub->select('mf')
-            ->from('App\Entity\ModuleFormation', 'mf')
-            ->where($sub->expr()->notIn('mf.id', $qb->getDQL()))
-            ->setParameter('id', $idSession)
-            ->orderBy('mf.intitule');
+        // on récupère les modules de formation qui ne figurent pas dans la première requête
 
-        $query = $sub->getQuery();
+        $sql2 = $em->createQueryBuilder();
+
+        $sql2->select('m')
+            ->from('App\Entity\ModuleFormation','m')
+            ->where($sql2->expr()->notIn('m.id', $sql1->getDQL()))
+            ->setParameter('id', $idSession)
+            ->orderBy('m.intitule', 'ASC');
+
+        // on exécute la requête complète et on retourne le résultat
+
+        $query = $sql2->getQuery();
+              
+
         return $query->getResult();
     }
 
