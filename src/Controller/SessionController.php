@@ -30,8 +30,8 @@ class SessionController extends AbstractController
     }
 
     /**
-     * @Route("/session/add", name="add_session")
-     * @Route("/session/update/{id}", name="update_session")
+     * @Route("/profile/session/add", name="add_session")
+     * @Route("/profile/session/update/{id}", name="update_session")
      */
     public function add(ManagerRegistry $doctrine, Session $session = NULL, Request $request)
     {
@@ -70,7 +70,6 @@ class SessionController extends AbstractController
         $entityManager = $doctrine->getManager();
         $session->addStagiaire($stagiaire);
         $entityManager->flush();
-        $stagiairesNonInscrits = $doctrine->getRepository(Session::class)->getNonInscrits($session->getId());
 
         return $this->redirectToRoute('show_session', [
             'id' => $session->getId(),
@@ -88,8 +87,23 @@ class SessionController extends AbstractController
         $entityManager = $doctrine->getManager();
         $session->removeStagiaire($stagiaire);
         $entityManager->flush();
-        $modulesNonProgrammes = $doctrine->getRepository(Session::class)->getModulesNonProgrammes($session->getId());
-        $stagiairesNonInscrits = $doctrine->getRepository(Session::class)->getStagiairesNonInscrits($session->getId());
+
+        return $this->redirectToRoute('show_session', [
+            'id' => $session->getId(),
+        ]);
+    }
+
+    /**
+     * @Route("/session/{idSession}/addProgramme/{idProgramme}", name="addProgramme_session")
+     * @ParamConverter("session", options={"mapping": {"idSession": "id"}})
+     * @ParamConverter("programme", options={"mapping": {"idProgramme": "id"}})
+     */
+    public function addProgramme(ManagerRegistry $doctrine, Programme $programme, Session $session)
+    {
+
+        $entityManager = $doctrine->getManager();
+        $session->addProgramme($programme);
+        $entityManager->flush();
 
         return $this->redirectToRoute('show_session', [
             'id' => $session->getId(),
@@ -109,8 +123,6 @@ class SessionController extends AbstractController
         $entityManager->remove($programme);
         $entityManager->persist($session);
         $entityManager->flush();
-        $modulesNonProgrammes = $doctrine->getRepository(Session::class)->getModulesNonProgrammes($session->getId());
-        $stagiairesNonInscrits = $doctrine->getRepository(Session::class)->getStagiairesNonInscrits($session->getId());
         
         return $this->redirectToRoute('show_session', [
             'id' => $session->getId(),
